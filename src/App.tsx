@@ -1,46 +1,34 @@
 import {useState} from "react";
+import {nanoid} from "nanoid";
 
-import logo from "./logo.svg";
-import "./App.css";
+import Die from "./components/Die";
 
-function App() {
-  const [count, setCount] = useState(0);
+export default function App() {
+  const [dice, setDice] = useState(allNewDice());
+
+  function allNewDice() {
+    const newDice = [];
+
+    for (let i = 0; i < 10; i++) {
+      newDice.push({
+        value: Math.ceil(Math.random() * 6),
+        id: nanoid(),
+        isHeld: false,
+      });
+    }
+
+    return newDice;
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img alt="logo" className="App-logo" src={logo} />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn React
-          </a>
-          {" | "}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <main className="container">
+      <h1>Tenzie Game</h1>
+      <div className="container__grid">
+        {dice.map((die) => (
+          <Die key={die.id} number={die.value} />
+        ))}
+      </div>
+      <button className="container__button">Roll</button>
+    </main>
   );
 }
-
-export default App;
