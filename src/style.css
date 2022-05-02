@@ -14,7 +14,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
     border-radius: 5px;
     padding: 40px;
 }
@@ -23,7 +23,7 @@ body {
     font-size: 30px;
     display: grid;
     grid-template-columns: repeat(5, minmax(5px,1fr));
-    gap: 100px;
+    gap: 80px;
 }
 
 .dice__number {
@@ -40,7 +40,7 @@ body {
 }
 
 .container__button {
-    height: 60px;
+    height: 100px;
     width: 140px;
     font-size: 30px;
     border-radius: 40px;
@@ -56,4 +56,17 @@ body {
 
 .container__button:active {
     box-shadow: inset 5px 5px 10px -3px rgba(0, 0, 0, 0.8);
+}
+
+.instructions {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 0;
+    text-align: center;
+}
+
+.title {
+    font-size: 60px;
+    margin: 0;
 }
