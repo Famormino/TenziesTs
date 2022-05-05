@@ -1,30 +1,39 @@
 import {useEffect, useState} from "react";
 import {nanoid} from "nanoid";
 import Confetti from "react-confetti";
+import "animate.css";
 
 import Die from "./components/Die";
 
 export default function App() {
   const [dice, setDice] = useState(allNewDice());
   const [tenzies, setTenzies] = useState(false);
+  const [play, setPlay] = useState(false);
+
+  console.log(play);
+
+  useEffect(() => {
+    if (play && !tenzies) {
+      const timer = setInterval(() => {
+        rollDice();
+        console.log("agggg");
+      }, 1500);
+
+      return () => clearInterval(timer);
+    } else {
+      setPlay(false);
+    }
+  }, [dice]);
 
   useEffect(() => {
     const allDieTrue = dice.every((die) => die.isHeld);
     const dieValue = dice[0].value;
-    const allSameValue = dice.map((die) => die.value === dieValue);
+    const allSameValue = dice.every((die) => die.value === dieValue);
 
     if (allDieTrue && allSameValue) {
       setTenzies(true);
     }
-  });
-
-  useEffect(() => {
-    window.addEventListener("keypress", (e) => {
-      if (e.code == "Space") {
-        rollDice();
-      }
-    });
-  }, []);
+  }, [dice]);
 
   function allNewDice() {
     const newDice = [];
@@ -38,10 +47,11 @@ export default function App() {
 
   function rollDice() {
     if (!tenzies) {
+      setPlay(true);
       setDice((oldDice) => oldDice.map((dice) => (dice.isHeld ? dice : generateNewDice())));
     } else {
-      setDice(allNewDice());
       setTenzies(false);
+      setDice(allNewDice());
     }
   }
 
@@ -68,15 +78,22 @@ export default function App() {
   return (
     <main className="container">
       {tenzies && <Confetti />}
-      <h1 className="title">Tenzies</h1>
-      <p className="instructions">
-        Roll until all dice are the same. Click each die to freeze it at its current value between
-        rolls.
-      </p>
-      <div className="container__grid">{diceElements}</div>
-      <button className="container__button" onClick={rollDice}>
-        {tenzies ? "New Game" : "Roll"}
-      </button>
+      {!tenzies && <h1 className="title animate__animated animate__flipInX">TenzieS</h1>}
+      {!tenzies && (
+        <p className="instructions">
+          Roll until all dice are the same. Click each die to freeze it at its current value between
+          rolls.
+        </p>
+      )}
+      {tenzies && <p className="winner animate__animated animate__zoomIn">¡YOU WON!</p>}
+      {play && (
+        <div className="container__grid animate__animated animate__flipInX">{diceElements}</div>
+      )}
+      {!play && (
+        <button className="container__button" onClick={rollDice}>
+          {tenzies ? "New Game" : "Start"}
+        </button>
+      )}
     </main>
   );
 }
