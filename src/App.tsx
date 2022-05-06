@@ -9,21 +9,21 @@ export default function App() {
   const [dice, setDice] = useState(allNewDice());
   const [tenzies, setTenzies] = useState(false);
   const [play, setPlay] = useState(false);
-
-  console.log(play);
+  const [count, setCount] = useState(0);
+  const [record, setRecord] = useState(0);
 
   useEffect(() => {
     if (play && !tenzies) {
       const timer = setInterval(() => {
         rollDice();
-        console.log("agggg");
-      }, 1500);
+        setCount(count + 1);
+      }, 1000);
 
       return () => clearInterval(timer);
     } else {
       setPlay(false);
     }
-  }, [dice]);
+  }, [dice, count, play, rollDice, tenzies]);
 
   useEffect(() => {
     const allDieTrue = dice.every((die) => die.isHeld);
@@ -32,6 +32,15 @@ export default function App() {
 
     if (allDieTrue && allSameValue) {
       setTenzies(true);
+      setRecord((prevRecord) => {
+        if (prevRecord === 0) return count;
+        if (prevRecord < count) return prevRecord;
+        if (prevRecord > count) {
+          localStorage.setItem("record", JSON.stringify(count));
+
+          return count;
+        }
+      });
     }
   }, [dice]);
 
@@ -52,6 +61,7 @@ export default function App() {
     } else {
       setTenzies(false);
       setDice(allNewDice());
+      setCount(0);
     }
   }
 
@@ -79,21 +89,21 @@ export default function App() {
     <main className="container">
       {tenzies && <Confetti />}
       {!tenzies && <h1 className="title animate__animated animate__flipInX">TenzieS</h1>}
-      {!tenzies && (
-        <p className="instructions">
-          Roll until all dice are the same. Click each die to freeze it at its current value between
-          rolls.
-        </p>
-      )}
+      {!tenzies && <p className="instructions">When you press Start, match all the numbers.</p>}
+      <div className="instructions">Actual Record: {record}</div>
       {tenzies && <p className="winner animate__animated animate__zoomIn">¡YOU WON!</p>}
       {play && (
         <div className="container__grid animate__animated animate__flipInX">{diceElements}</div>
       )}
       {!play && (
-        <button className="container__button" onClick={rollDice}>
+        <button
+          className="container__button animate__animated animate__bounceIn"
+          onClick={rollDice}
+        >
           {tenzies ? "New Game" : "Start"}
         </button>
       )}
+      {play && <div className="container__count">Roll {count}</div>}
     </main>
   );
 }
