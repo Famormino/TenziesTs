@@ -10,7 +10,7 @@ export default function App() {
   const [tenzies, setTenzies] = useState(false);
   const [play, setPlay] = useState(false);
   const [count, setCount] = useState(0);
-  const [record, setRecord] = useState(0);
+  const [record, setRecord] = useState(JSON.parse(localStorage.getItem("record") || 0));
 
   useEffect(() => {
     if (play && !tenzies) {
@@ -31,11 +31,18 @@ export default function App() {
     const allSameValue = dice.every((die) => die.value === dieValue);
 
     if (allDieTrue && allSameValue) {
+      localStorage.setItem("record", JSON.stringify(count));
       setTenzies(true);
       setRecord((prevRecord) => {
-        if (prevRecord === 0) return count;
-        if (prevRecord < count) return prevRecord;
-        if (prevRecord > count) {
+        if (prevRecord === 0) {
+          localStorage.setItem("record", JSON.stringify(count));
+
+          return count;
+        } else if (prevRecord < count) {
+          localStorage.setItem("record", JSON.stringify(prevRecord));
+
+          return prevRecord;
+        } else {
           localStorage.setItem("record", JSON.stringify(count));
 
           return count;
