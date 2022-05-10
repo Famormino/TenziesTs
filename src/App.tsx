@@ -5,16 +5,31 @@ import "animate.css";
 
 import Die from "./components/Die";
 
+interface DieProps {
+  value: number;
+  isHeld: boolean;
+  id: string;
+}
+
+interface AppState {
+  dice: Array<DieProps>;
+  tenzies: boolean;
+  play: boolean;
+  count: number;
+  record: string;
+}
+
 export default function App() {
-  const [dice, setDice] = useState(allNewDice());
-  const [tenzies, setTenzies] = useState<boolean>(false);
-  const [play, setPlay] = useState(false);
-  const [count, setCount] = useState(0);
-  const [record, setRecord] = useState(JSON.parse(localStorage.getItem("record") || 0));
+  const [dice, setDice] = useState<AppState["dice"]>(allNewDice() || []);
+  const [tenzies, setTenzies] = useState<AppState["tenzies"]>(false);
+  const [play, setPlay] = useState<AppState["play"]>(false);
+  const [count, setCount] = useState<AppState["count"]>(0);
+  const [record, setRecord] = useState<AppState["record"]>(
+    JSON.parse(localStorage.getItem("record") || "0"),
+  );
 
   useEffect(() => {
     if (play && !tenzies) {
-      console.log("cuenta");
       const timer = setInterval(() => {
         rollDice();
         setCount((prevCount) => prevCount + 1);
@@ -61,6 +76,9 @@ export default function App() {
 
     return newDice;
   }
+  function generateNewDice() {
+    return {value: Math.ceil(Math.random() * 6), id: nanoid(), isHeld: false};
+  }
 
   function rollDice() {
     if (!tenzies) {
@@ -77,10 +95,6 @@ export default function App() {
     setDice((oldDice) =>
       oldDice.map((dice) => (dice.id === id ? {...dice, isHeld: !dice.isHeld} : dice)),
     );
-  }
-
-  function generateNewDice() {
-    return {value: Math.ceil(Math.random() * 6), id: nanoid(), isHeld: false};
   }
 
   const diceElements = dice.map((die) => (
