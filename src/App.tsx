@@ -7,23 +7,24 @@ import Die from "./components/Die";
 
 export default function App() {
   const [dice, setDice] = useState(allNewDice());
-  const [tenzies, setTenzies] = useState(false);
+  const [tenzies, setTenzies] = useState<boolean>(false);
   const [play, setPlay] = useState(false);
   const [count, setCount] = useState(0);
   const [record, setRecord] = useState(JSON.parse(localStorage.getItem("record") || 0));
 
   useEffect(() => {
     if (play && !tenzies) {
+      console.log("cuenta");
       const timer = setInterval(() => {
         rollDice();
-        setCount(count + 1);
-      }, 1000);
+        setCount((prevCount) => prevCount + 1);
+      }, 1500);
 
       return () => clearInterval(timer);
     } else {
       setPlay(false);
     }
-  }, [dice, count, play, rollDice, tenzies]);
+  }, [play, count]);
 
   useEffect(() => {
     const allDieTrue = dice.every((die) => die.isHeld);
@@ -98,13 +99,13 @@ export default function App() {
       {!tenzies && <h1 className="title animate__animated animate__flipInX">TenzieS</h1>}
       {!tenzies && <p className="instructions">When you press Start, match all the numbers.</p>}
       <div className="instructions">Actual Record: {record}</div>
-      {tenzies && <p className="winner animate__animated animate__zoomIn">¡YOU WON!</p>}
+      {tenzies && <p className="winner animate__animated animate__rubberBand">¡YOU WON!</p>}
       {play && (
         <div className="container__grid animate__animated animate__flipInX">{diceElements}</div>
       )}
       {!play && (
         <button
-          className="container__button animate__animated animate__bounceIn"
+          className="container__button animate__animated animate__backInDown"
           onClick={rollDice}
         >
           {tenzies ? "New Game" : "Start"}
