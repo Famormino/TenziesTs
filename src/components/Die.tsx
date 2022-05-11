@@ -2,6 +2,7 @@ interface DieProps {
   value: number;
   isHeld: boolean;
   id: string;
+  holdDice: Function;
 }
 
 export default function Die(props: DieProps) {

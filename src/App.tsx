@@ -28,6 +28,7 @@ export default function App() {
     JSON.parse(localStorage.getItem("record") || "0"),
   );
 
+  console.log(dice);
   useEffect(() => {
     if (play && !tenzies) {
       const timer = setInterval(() => {
