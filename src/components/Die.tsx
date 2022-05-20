@@ -1,9 +1,4 @@
-interface DieProps {
-  value: number;
-  isHeld: boolean;
-  id: string;
-  holdDice: Function;
-}
+import {DieProps} from "../types";
 
 export default function Die(props: DieProps) {
   const styles = {

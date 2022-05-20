@@ -86,6 +86,12 @@ body {
     }
 }
 
+@media  screen and (width: 1250px) {
+    .container__button{
+        margin-top: 270px;
+    }
+}
+
 @media  screen and (max-width: 810px) {
     .container__button{
         margin-top: 270px;

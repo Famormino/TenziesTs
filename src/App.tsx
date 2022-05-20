@@ -1,22 +1,17 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {nanoid} from "nanoid";
 import Confetti from "react-confetti";
+
 import "animate.css";
-
+import {DieProps} from "./types";
 import Die from "./components/Die";
-
-interface DieProps {
-  value: number;
-  isHeld: boolean;
-  id: string;
-}
 
 interface AppState {
   dice: Array<DieProps>;
   tenzies: boolean;
   play: boolean;
   count: number;
-  record: string;
+  record: number;
 }
 
 export default function App() {
@@ -28,7 +23,6 @@ export default function App() {
     JSON.parse(localStorage.getItem("record") || "0"),
   );
 
-  console.log(dice);
   useEffect(() => {
     if (play && !tenzies) {
       const timer = setInterval(() => {
@@ -40,7 +34,7 @@ export default function App() {
     } else {
       setPlay(false);
     }
-  }, [play, count]);
+  }, [play, count, tenzies]);
 
   useEffect(() => {
     const allDieTrue = dice.every((die) => die.isHeld);
@@ -92,7 +86,7 @@ export default function App() {
     }
   }
 
-  function holdDice(id) {
+  function holdDice(id: string) {
     setDice((oldDice) =>
       oldDice.map((dice) => (dice.id === id ? {...dice, isHeld: !dice.isHeld} : dice)),
     );
